@@ -21,6 +21,10 @@ function App() {
   let [title, setTitle] = useState(['리액트학습', '울산 맛집', '겨울 코트추천']); 
   let [likeCnt, setLikeCnt]= useState([0,0,0]);
   let [isShow, setIsShow]= useState(false);
+
+  //input 태그에 입력한 값을 저장하고 있는 state 변수 (input 태그는 문자열로 받기때문에 빈문자'' 초기화)
+  let[newTitle, setNewTitle] = useState('') 
+
   // let title ='첫번째 글'
  
 
@@ -54,14 +58,30 @@ function App() {
       {
           title.map((e,i)=>{
               return(
-                <List key={i} title={e} likeCnt={likeCnt} idx={i} setLikeCnt={setLikeCnt} setIsShow={setIsShow}/>
+                <List key={i} setTitle={setTitle} title={title} likeCnt={likeCnt} idx={i} setLikeCnt={setLikeCnt} setIsShow={setIsShow}/>
               );
           })
       }
-    
-    {
-      isShow?<Detail/> : ''
-    }
+
+      <div>
+        <input type='text' onChange={(e)=>{
+          //  input 태그에 입력한 값을 출력
+            //console.log(e.target.value)
+          newTitle = setNewTitle(e.target.value)
+        }}/>
+        <input type='button' value={'저장'} onClick={(i)=>{
+          let copyTitle =[...title];
+          //copyTitle.push(newTitle)
+          //unshift: 맨위에뜨기
+          copyTitle.unshift(newTitle)
+          setTitle(copyTitle);
+          
+        }}/>
+      </div>  
+      
+      {
+        isShow?<Detail/> : ''
+      }
 
 
     </div>
@@ -75,15 +95,22 @@ function List(props){
         <h4><span onClick={()=>{
           
           props.setIsShow(true);
-        }}>{props.title}</span>
+        }}>{props.title[props.idx]}</span>
 
-          <span onClick={()=>{
+          {/* <span onClick={()=>{
             let copyLikeCnt =[...props.likeCnt];
             copyLikeCnt[props.idx]++;
             props.setLikeCnt(copyLikeCnt);
 
-          }}>👍</span>{props.likeCnt[props.idx]}</h4>
+          }}>👍</span>{props.likeCnt[props.idx]} */}
+          </h4>
         <p>2024-02-19 작성</p>
+        <button type='button' onClick={(e) =>{
+            let copyTitle=[...props.title]
+            copyTitle.splice(props.idx,1)
+            props.setTitle(copyTitle)
+            
+        }}>삭제</button>
       </div>
   );
 }
